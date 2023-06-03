@@ -1,5 +1,6 @@
 'use strict';
 const Employee = require('../models/employee.model');
+
 exports.findAll = function(req, res) {
 Employee.findAll(function(err, employee) {
   console.log('controller')
@@ -9,6 +10,7 @@ Employee.findAll(function(err, employee) {
   res.send(employee);
 });
 };
+
 exports.create = function(req, res) {
 const new_employee = new Employee(req.body);
 //handles null error
