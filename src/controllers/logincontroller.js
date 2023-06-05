@@ -64,7 +64,7 @@ const loginView = (req, res) => {
 
 //Logging in Function
 
-const loginUser = (req, res, next) => {
+const loginUser = (req, res) => {
   const { email, password } = req.body;
 
   //Required
@@ -79,7 +79,7 @@ const loginUser = (req, res, next) => {
       successRedirect: "/app/dashboard",
       failureRedirect: "/app/login",
       failureFlash: true,
-    })(req, res);
+    })(req,res);
   }
 };
 
