@@ -10,50 +10,50 @@ const registerView = (req, res) => {
 //Post Request for Register
 
 const registerUser = (req, res) => {
+  console.log(req);
   const { name, email, location, password, confirm } = req.body;
 
   if (!name || !email || !password || !confirm) {
     console.log("Fill empty fields");
   }
-  console.log(req);
+
   //Confirm Passwords
 
   if (password !== confirm) {
     console.log("Password must match");
   } else {
-    //Validation
-    exports.findOne = function(req, res) {
-        User.findOne(email, function(err, user) {
-            if (user) {
-                console.log("email exists");
-                res.render("register", {
-                  name,
-                  email,
-                  password,
-                  confirm,
-                });
-              } else {
-                //Validation
-                const newUser = new User({
-                  name,
-                  email,
-                  location,
-                  password,
-                });
-                //Password Hashing
-                bcrypt.genSalt(10, (err, salt) =>
-                  bcrypt.hash(newUser.password, salt, (err, hash) => {
-                    if (err) throw err;
-                    newUser.password = hash;
-                    newUser
-                      .save()
-                      .then(res.redirect("/web/login"))
-                      .catch((err) => console.log(err));
-                  })
-                );
-              }
-        });
-    };
+      User.findOne(email, function(err, user) {
+        //console.log(user);
+        if (user) {
+          console.log("email exists");
+          res.render("register", {
+            name,
+            email,
+            password,
+            confirm,
+          });
+        } else {
+          //Validation
+          const newUser = new User({
+            name,
+            email,
+            location,
+            password,
+          });
+          //Password Hashing
+          bcrypt.genSalt(10, (err, salt) =>
+            bcrypt.hash(newUser.password, salt, (err, hash) => {
+              if (err) throw err;
+              newUser.password = hash;
+              User.create(newUser, function(err, user) {
+                if (err)
+                res.send(err);
+                res.json({error:false,message:"user added successfully!",data:user});
+              });
+            })
+          ); 
+        }
+      });
   }
 };
 
@@ -64,20 +64,20 @@ const loginView = (req, res) => {
 
 //Logging in Function
 
-const loginUser = (req, res) => {
+const loginUser = (req, res, next) => {
   const { email, password } = req.body;
 
   //Required
   if (!email || !password) {
-    console.log("Please fill in all the fields");
+    console.log("email or password fields required");
     res.render("login", {
       email,
       password,
     });
   } else {
     passport.authenticate("local", {
-      successRedirect: "/web/dashboard",
-      failureRedirect: "/web/login",
+      successRedirect: "/app/dashboard",
+      failureRedirect: "/app/login",
       failureFlash: true,
     })(req, res);
   }

@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 app.set('views', path.join(__dirname, './src/views'));
 app.set("view engine", "ejs");
 //Routes
-app.use("/web", require("./src/routes/loginroutes"));
+app.use("/app", require("./src/routes/loginroutes"));
 // For API
 // Require employee routes
 const employeeRoutes = require('./src/routes/employee.routes')

@@ -3,14 +3,14 @@ LocalStrategy = require("passport-local").Strategy;
 
 //Load model
 
-const User = require("../models/User");
+const User = require("../models/usermodel");
 
 const loginCheck = passport => {
   passport.use(
     new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
       //Check customer
 
-      User.findOne({ email: email })
+        User.findOne({ email: email })
         .then((user) => {
           if (!user) {
             console.log("wrong email");
